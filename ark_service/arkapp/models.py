@@ -15,13 +15,22 @@ class Minter(models.Model):
 	def __repr__(self):
 		return '<Minter: {}>'.format(self.name)
 
-	# def _ark_exists(self, key):
-	# 	if Ark.objects.filter(key=key)
-	# 		return True
-	# 	else
-	# 		return False
+	def _ark_exists(self, key):
+		if len(Ark.objects.filter(key=key)) > 0:
+			return True
+		else:
+			return False
 
-	# def mint(self, )
+	def mint(self, quantity):
+		for ark in range(quantity):
+			key = arkpy.mint(authority=settings.NAAN, prefix=self.prefix, template = self.template)
+
+			if ark._ark_exists(self, key) is False:
+				Ark.objects.create(key = key)
+			
+			else:
+				Pass
+
 
 class Ark(models.Model):
 
@@ -34,4 +43,6 @@ class Ark(models.Model):
 	def __repr__(self):
 		return '<Ark: {}>'.format(self.key)
 
-	# def bind(self, url):
+	def bind(self, url):
+		pass
+
