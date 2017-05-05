@@ -28,7 +28,6 @@ class Minter(models.Model):
 
 			if self._ark_exists(self, key) is False:
 				Ark.objects.create(key = key)
-			
 			else:
 				continue
 
