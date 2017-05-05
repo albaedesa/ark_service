@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+import arkpy
 
 # Create your models here.
 
@@ -25,11 +26,11 @@ class Minter(models.Model):
 		for ark in range(quantity):
 			key = arkpy.mint(authority=settings.NAAN, prefix=self.prefix, template = self.template)
 
-			if ark._ark_exists(self, key) is False:
+			if self._ark_exists(self, key) is False:
 				Ark.objects.create(key = key)
 			
 			else:
-				Pass
+				continue
 
 
 class Ark(models.Model):
