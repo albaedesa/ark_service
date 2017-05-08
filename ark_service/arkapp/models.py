@@ -23,13 +23,21 @@ class Minter(models.Model):
 			return False
 
 	def mint(self, quantity):
-		for ark in range(quantity):
+		ark_list = []
+
+		for item in range(quantity):
 			key = arkpy.mint(authority=settings.NAAN, prefix=self.prefix, template = self.template)
 
-			if self._ark_exists(self, key) is False:
-				Ark.objects.create(key = key)
-			else:
-				continue
+			while self._ark_exists(key) is False:
+				ark = Ark.objects.create(key=key, minter=self)
+				ark.save()
+				ark_list.append(ark)
+
+		if quantity == 1:
+			return ark_list[0]
+		else:
+			return ark_list 
+				
 
 
 class Ark(models.Model):
@@ -38,11 +46,14 @@ class Ark(models.Model):
 	date_created = models.DateTimeField(auto_now_add=True)
 	date_updated = models.DateTimeField(auto_now=True)
 	minter = models.ForeignKey('Minter', on_delete=models.CASCADE)
-	url = models.URLField(max_length=200, null=True, blank=True)
+	target = models.URLField(max_length=200, null=True, blank=True)
 
 	def __repr__(self):
 		return '<Ark: {}>'.format(self.key)
 
-	def bind(self, url):
-		pass
+	def bind(self, target):
+		target = Ark.objects.get(key=self.key)
+		ark.target = target
+		ark.save()
+		return self.target
 
